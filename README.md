@@ -4,6 +4,9 @@ Edit, rearrange, and reuse Markdown blocks in Obsidian's Live Preview editor.
 
 Open block actions from one `⠿` handle, organize lists and callouts by dragging, and reuse content across notes with move, copy, link, or embed.
 
+<img width="520" height="655" alt="1Capture_20261013144415" src="https://github.com/user-attachments/assets/ac6fef02-14b3-45ef-be0e-b177195e72cb" />
+
+
 **Requires Obsidian 1.8.7 or later on desktop. Works in Live Preview.**
 
 - **Edit from one menu:** convert blocks, insert content, apply colors, and copy block links.
