@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.2-peng.1]
+
+- Personal plugin ID `notion-block-peng` with upstream 1.7.2 behavior preserved.
+- Per-table formatting, optional header row and column, blank-row cleanup, and previews.
+- Persistent resizable columns, keyboard controls, responsive widths, and automatic-width reset.
+- Keep table settings and block IDs together when moving a table.
+- Source regression tests and controlled local deployment.
+
 ## [1.7.2] - 2026-10-05
 
 ### Fixed

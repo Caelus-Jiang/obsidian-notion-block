@@ -295,6 +295,14 @@ class NotionBlockActionMenu extends Component {
 
     private getBlockActionItems(): ActionItem[] {
         return [
+            ...(this.plugin.tableFormatter.hasTable(this.view, this.lineNo) ? [{
+                id: "format-table", label: "格式化当前表格…", icon: "table-properties",
+                action: () => {
+                    this.close(false);
+                    this.plugin.tableFormatter.openAt(this.view, this.lineNo);
+                    return true;
+                }
+            }] : []),
             { id: "select-block", label: t("menu.selectBlock"), icon: "text-select", action: () => selectWholeBlock(this.view, this.lineNo) },
             { id: "copy-link", label: t("menu.copyLink"), icon: "link", shortcut: "⌘⌃L", action: () => this.copyBlockLink() },
             { id: "delete", label: t("menu.delete"), icon: "trash-2", shortcut: "Del", action: () => this.deleteLine() },

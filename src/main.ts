@@ -1,4 +1,9 @@
 import { Plugin } from 'obsidian';
+import * as Obsidian from 'obsidian';
+import * as CodeMirror from '@codemirror/view';
+import * as History from '@codemirror/commands';
+import { install } from './tableFormat';
+import { getBlockRanges } from './blockRange';
 import { BlockPluginSettings, DEFAULT_SETTINGS, BlockPluginSettingTab } from './settings';
 import { blockHandlesExtension } from './blockHandles';
 import { MenuLayout, normalizeMenuLayout } from './menuLayout';
@@ -7,11 +12,13 @@ import { CrossDocumentDrag } from './crossDocument';
 export default class NotionBlock extends Plugin {
     settings: BlockPluginSettings;
     transfers: CrossDocumentDrag;
+    tableFormatter: ReturnType<typeof install>;
     private settingsSaveQueue: Promise<void> = Promise.resolve();
     private savedMenuLayout: MenuLayout = normalizeMenuLayout();
 
     async onload() {
         await this.loadSettings();
+        this.tableFormatter = install(this, Obsidian, CodeMirror, getBlockRanges, History);
 
         // Register the CodeMirror 6 extension for hover handles
         this.transfers = this.addChild(new CrossDocumentDrag(this.app));

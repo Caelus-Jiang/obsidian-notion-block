@@ -9,3 +9,8 @@ AGENTS.md.bak-*
 .agent/
 .agents/
 .claude/
+
+# Machine-specific deployment settings and output
+.deploy.local.json
+dist/
+data.json

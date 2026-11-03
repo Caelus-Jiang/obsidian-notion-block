@@ -1,3 +1,5 @@
+> **Personal build:** see [PERSONAL.md](PERSONAL.md) for table tools, deployment, upstream updates, and rollback.
+
 # Notion block for Obsidian
 
 Edit, rearrange, and reuse Markdown blocks in Obsidian's Live Preview editor.

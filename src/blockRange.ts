@@ -18,6 +18,7 @@ const QUOTE_PREFIX = /^ {0,3}>[ \t]?/;
 const FENCE = /^ {0,3}(`{3,}|~{3,})(.*)$/;
 const DIVIDER = /^ {0,3}(?:(?:\*[ \t]*){3,}|(?:-[ \t]*){3,}|(?:_[ \t]*){3,})$/;
 const SETEXT = /^ {0,3}(?:=+|-+)[ \t]*$/;
+const TABLE_METADATA = /^<!-- notion-table: header-row=[01] header-column=[01](?: widths=[0-9]+(?:,[0-9]+)*)? -->$/;
 const cache = new WeakMap<Text, readonly BlockRange[]>();
 
 function indentation(text: string): number {
@@ -40,7 +41,7 @@ function standaloneType(doc: Text, lineNo: number): MarkdownBlockType {
     const text = doc.line(lineNo).text;
     if (FENCE.test(text) || text.trim() && indentation(text) >= 4) return "code";
     if (/^ {0,3}\$\$/.test(text)) return "math";
-    if (/^ {0,3}%%/.test(text)) return "comment";
+    if (/^ {0,3}%%/.test(text) || TABLE_METADATA.test(text)) return "comment";
     if (CALLOUT_HEADER.test(text)) return "callout";
     if (QUOTE_PREFIX.test(text)) return "blockquote";
     if (DIVIDER.test(text)) return "divider";
@@ -88,7 +89,7 @@ export function getBlockRanges(doc: Text): readonly BlockRange[] {
                 }
             }
         } else if (type === "comment") {
-            if (!first.slice(first.indexOf("%%") + 2).includes("%%")) {
+            if (!TABLE_METADATA.test(first) && !first.slice(first.indexOf("%%") + 2).includes("%%")) {
                 while (end < doc.lines) {
                     end++;
                     if (doc.line(end).text.includes("%%")) break;
@@ -138,7 +139,16 @@ export function getBlockRanges(doc: Text): readonly BlockRange[] {
             while (anchor <= doc.lines && !doc.line(anchor).text.trim()) anchor++;
             if (anchor <= doc.lines && STANDALONE_BLOCK_ID.test(doc.line(anchor).text)) end = anchor;
         }
-        blocks.push(range(doc, start, end, type));
+        let blockStart = start;
+        if (type === "table") {
+            let metadata = start - 1;
+            while (metadata >= 1 && !doc.line(metadata).text.trim()) metadata--;
+            if (metadata >= 1 && TABLE_METADATA.test(doc.line(metadata).text)) {
+                blockStart = metadata;
+                while (blocks.length && blocks[blocks.length - 1].startLine >= metadata) blocks.pop();
+            }
+        }
+        blocks.push(range(doc, blockStart, end, type));
         start = end + 1;
     }
     cache.set(doc, blocks);

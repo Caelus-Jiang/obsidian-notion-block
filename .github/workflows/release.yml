@@ -27,6 +27,7 @@ jobs:
           npm run lint:store
           npm run lint
           npm run typecheck
+          npm test
           npm run build
 
       - name: Prepare release notes
